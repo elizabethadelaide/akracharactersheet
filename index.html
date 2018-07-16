@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Akra</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Averia+Serif+Libre" rel="stylesheet">
+
+    <!-- import the webpage's javascript file -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <h1 id="Name">Akra</h1>
+    <h2>
+      A brave punch fish girl
+    </h2>
+
+    <div id="app">
+    <div id="stats" v-on:my-roll="dieroll">
+
+      <h1>Roll: {{output}}</h1>
+      <h2>Last roll: {{lastroll}}</h2>
+      <div class="ability">
+        <roller v-for="(value, key) in mods"
+              v-bind:name="key"
+              v-bind:roll="value"
+              @my-roll="dieroll">
+        </roller>
+      </div>
+      <div id="otherstats">
+        <h1>
+          AC: 17
+        </h1>
+        <form>
+          HP: <input type="text" v-model="hp">
+          Temp Hp <input type="text" v-model="temphp">
+        </form>
+        <p>
+          Speed: 50
+        </p>
+        <p>
+          Hit die: 14d8
+        </p>
+        <p>
+          Passive perception: {{passiveperc}}
+        </p>
+      </div>
+      <div class="saving">
+        <p>
+          Saving throws
+        </p>
+        <roller v-for="(value, key) in saving"
+              v-bind:name="key"
+              v-bind:roll="value"
+              @my-roll="dieroll">
+        </roller>
+      </div>
+      <div class="skills" >
+        <roller v-for="(value, key) in skills"
+              v-bind:name="key"
+              v-bind:roll="value"
+              @my-roll="dieroll">
+        </roller>
+      </div>
+      <div class="violence">
+        <attackroll v-for="a in battle"
+          v-bind:attack="a.attack"
+          @dexattack="dexattackroll"
+          @roll="dieroll">
+        </attackroll>
+      </div>
+      <div id="power" style="margin:0; border-style:none;">
+      <div class="powers">
+        <h1>Ki powers</h1>
+        <h2>DC: {{kidc}}</h2>
+        <form>
+          Ki points: <input type="text" v-model="kipoints">
+        </form>
+        <attackroll v-for="k in Ki"
+          v-bind:attack="k"
+          @dexattack="dexattackroll"
+          @roll="dieroll">
+        </attackroll>
+      </div>
+      <div class="powers">
+        <h1>Triton powers</h1>
+        <h2>DC:</h2>
+        <h2>Can only be used once per day</h2>
+        <attackroll v-for="t in Triton"
+          v-bind:attack="t"
+          @dexattack="dexattackroll"
+          @roll="dieroll">
+        </attackroll>
+      </div>
+    </div>
+    </div>
+
+          <div id="info">
+            <div id="bio">
+              <p>Height: 4'8"</p>
+              <p>Weight: 110</p>
+              <p>Triton</p>
+            </div>
+            <!--This may be something to update from somewhere,
+            but for now I hardly ever pick up anything -->
+            <div id="equipment">
+              <ul>
+              <h1>Equipment</h1>
+              <li>Eel skin clothes</li>
+              <li>Heavy cloak to soak in water</li>
+              <li>Beading kit</li>
+              <li>A rubber ducky of powerful and unknown origin.</li>
+              <!-- idk what to with them yet, but something fun? -->
+              <li><specialitem name="Sun Wraps"></specialitem>
+Little mirrors woven into these wraps allow you to amplify your sun abilities in new ways. After you've spent at least 1 hours in daylight, you gain a shield of sunlight. Gain temporary health points equal to your monk level + WIS. You may recharge these points during a short rest.
+When you hit a target using an unarmed strike, you may spend 1 Ki point to force   any targets within 5 feet of that creature to make a CON save (DC 15), or else they are blinded. Blinded enemies can attempt to make another CON save to end the condition at the end of each of their turns.</li>
+            <li><specialitem name="Daybreak"></specialitem>
+With these brass knuckles, unarmed strikes hurt a little more. You gain +1 to attack and damage rolls, and you deal an additional 1d4 bludgeoning damage. When you shoot a sunblast and it hits a target, you can teleport yourself to anywhere within 5 feet of that creature.</li>
+              <li><specialitem name="Sun monk scroll"></specialitem>
+The scroll is written in an unknown language. It's characters appear to be based on circles and lines, like little suns with dots inside.
+The scroll tells of the Order of the Sun, which arose in defiance against the rule of the Black Sage, who used the powers of shadow to oppress the Firstborn and allow the first Gascari towns to be established. The Order of the Sun were Firstborn who rose their arms up to the sky and meditated until they understood how to resist the Gascari. After the Black Sage had died, they rebelled against the Secondborn governors and they succeeded only in creating one nation for themselves, Basoor, a land with no ports, no resources, no trade routes. But there, in the Basooran Desert, under the sweltering heat of the sun, they learned patience. They began to share their knowledge with Thirdborn, the ones the Secondborn call Mistakes. But the Secondborn realized what this knowledge was doing, that it encouraged the Secondborn and Thirdborn to rebel once again, so they outlawed the Order of the Sun and murdered all of its leaders. Some fled south, some fled across the sea, and it is believed many went into hiding in Basoor.  Thus, the Order of the Sun scattered and faded from knowledge, its relics burned, sold, or fallen into the sea.
+            </ul>
+            </div>
+            <div id="thingsshecando">
+              <ul>
+              <li>Speaks in all languages, including fish</li>
+              <li>Immune to disease and poison</li>
+              <li>Slow fall: As a reaction, fall damage reduced by 5xLvl</li>
+            </ul>
+            </div>
+          </div>
+    </div>
+
+
+  </body>
+</html>

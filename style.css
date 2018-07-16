@@ -1,0 +1,135 @@
+body{
+ font-family: "Averia Serif Libre";
+  background: #09034C;
+  color: #FFD200;
+  padding: 0;
+}
+h2{
+  font-size: 1em;
+}
+
+
+#stats{
+  text-align: center;
+  background: #09034C;
+}
+#stats div{
+  border-style:solid;
+  margin:10px;
+  float:left;
+  padding:5px;
+}
+.ability{
+ margin: 40px;
+  font-size: 2em;
+width: 10%;
+min-width:100px;
+padding:10px;
+}
+.skills{
+}
+.saving{
+}
+input{
+  width: 50px;
+  text-align:center;
+  background: #052273;
+  color: #FFD200;
+  border-style:none;
+  font-size:1.5em;
+}
+.roller{
+  cursor:pointer;
+  color: #00F7FF;
+}
+.roller:hover{
+  color:#D67726;
+}
+.violence{
+  width:30%;
+  min-width:150px;
+}
+.violence li{
+  padding: 10px;
+}
+.powers{
+  float:left;
+  width:40%;
+  min-width:150px;
+}
+#power{
+  margin:0;
+  float:none;
+  border-style:none;
+  background:#6F98D1;
+  color: #09034C;
+}
+#power .roller{
+  color:#8C0F00;
+}
+#power .roller:hover{
+  color:#FFCA00;
+}
+#info{
+  margin:0;
+  float:none;
+  clear:both;
+  padding-top:20px;
+  padding-bottom:20px;
+  background:#00D1C7;
+  width:100%;
+}
+#info div{
+  margin-top:10%;
+  margin-bottom:10%;
+  margin:5%;
+  padding:10px;
+  color:#110D70;
+  width:80%;
+  max-width:500px;
+  border-style:solid;
+}
+.specialitem{
+  text-decoration: underline yellow;
+}
+.nondiv{
+  border-style:none;
+  margin:none;
+}
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    border-style:solid;
+    display: inline-block;
+    margin-left: 5px;
+    border-bottom: 1px solid white;
+	 /* font-size:26px !important;*/
+   cursor:pointer;
+}
+.tooltip:hover{
+  border-color:white;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: #fff;
+    padding: 5px 0;
+    background: #09034C;
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    left: -160px;
+    margin-top: -58px;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+		width:400px;
+	  border: 3px solid white;
+		padding:10px;
+
+}
