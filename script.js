@@ -1,17 +1,21 @@
+//global component for footnotes
 Vue.component('alttext', {
   props: ['text'],
+  //footnotes are handles using css
   template:`
-    <p v-if='text!=""' class="tooltip">&nbsp;
+    <p v-if='text!=""' class="tooltip">^
       <span class="tooltiptext">{{text}}</span>
     </p>
   `
 });
 
+//app for overall app
 var statapp = new Vue({
   el: "#app",
+  //base data
   data: {
-    lvl: 14,
-    base: {
+    lvl: 15,
+    base: { //these are the attributes which can be used to calculate many other attributes
       Str: 14,
       Dex: 18,
       Con: 18,
@@ -19,16 +23,16 @@ var statapp = new Vue({
       Wis: 18,
       Cha: 11
     },
-    hp: 141 ,
-    skillcorr: {
+    hp: 149,
+    skillcorr: { //Each skill corresponds to a different attribute
       Str: ["Athletics"],
       Dex: ["Acrobatics", "Sleight of Hand", "Stealth"],
       Int: ["Arcana", "History", "Nature", "Religion","Investigation"],
       Cha: ["Deception", "Performance","Persuasion"],
       Wis: ["Animal Handling", "Insight", "Medicine", "Perception", "Survival"]
     },
-    profbonus: 5,
-    prof: [
+    profbonus: 5, //proficiency bonus corresponds to level technically, but only changes every few levels
+    prof: [ //these skills get an extra bonus
       "Acrobatics",
       "Animal Handling",
       "Athletics",
@@ -37,7 +41,8 @@ var statapp = new Vue({
     ],
     output: "",
     lastroll: "",
-    //realized this data structure isn't ideal at all :/
+    //realized this data structure isn't ideal, could be edited
+    //each one should be a keys with various attributes, see Ki points for a better example
     battle: [
       {attack: {
         text: "1d8+1+1d4 bludgeoning damage.",
@@ -142,30 +147,30 @@ var statapp = new Vue({
       }
     }
   },
+  //technically most of these aren't dynamic, so a lot of these could be on 'started' instead of 'computed'
   computed:{
+    //base modifiers
    mods: function (){
-      //console.log("Getting");
       var out = {};
       for (var b in this.base){
+        //formula for getting modifier based on base attributes
         out[b] = Math.floor((this.base[b]) / 2) - 5;
-        //console.log(b, this.base.b);
       }
-      /***********/
       return out;
     },
-    saving:
-      function(){
+    //saving throw modifiers
+    saving: function(){
        var out = {};
         for (var m in this.mods){
-          out[m] = this.mods[m] + this.profbonus; //monk skill means prof in all saving throws :)
+          out[m] = this.mods[m] + this.profbonus; //monk skill means prof in all saving throws
         }
         return out;
       },
-    skills:
-      function(){
+    //skill modifiers
+    skills: function(){
        var out = {};
        for (var m in this.skillcorr){
-         for (var s in this.skillcorr[m]){
+         for (var s in this.skillcorr[m]){ //use skill lookup table from data
            var skill = this.skillcorr[m][s]
            out[skill] = this.mods[m];
            if (this.prof.includes(skill)){
@@ -174,12 +179,14 @@ var statapp = new Vue({
          }
 
        }
+      //order skills into alphabetical order
       var ordered = {};
       Object.keys(out).sort().forEach(function(key) {
         ordered[key] = out[key];
       });
       return ordered;
       },
+    //passive perception
     passiveperc:  function(){
         return 10+this.mods["Wis"];
       },
@@ -187,16 +194,23 @@ var statapp = new Vue({
       //from mirror Wraps
       return this.lvl+this.mods["Wis"];
     },
+    //Ki DC
     kidc: function(){
       return 8+this.profbonus+this.mods["Wis"];
     },
+    //Number of Ki points
     kipoints: function(){
       return this.lvl;
+    },
+    //Triton DC
+    tritondc: function(){
+      return 8+this.profbonus+this.mods["Cha"];
     }
   },
   components: {
-    roller: {
-      props: ['name', 'roll'],
+    roller: { //roller used for based d20 rolls like modifiers or skills
+      props: ['name', 'roll'], //text of roller, and numbers
+      //emit emits the command to the parent, which will run the roll funtion in methods
       template:`
         <p v-on:click="$emit('my-roll', 20, roll, 1, name)"
         class="roller"
@@ -205,17 +219,16 @@ var statapp = new Vue({
       data: function(){
         var n = this.roll;
         if (n >= 0)
-            return {display: "+" + n};
+            return {display: "+" + n}; //always add a + for clarity
         else
-            return {display: n};
+            return {display: n}; //- sign
       }
     },
-    attackroll: {
+    attackroll: { //more complicated rolls go here, generally these are attack rolls
       props: ['attack'],
-      data: function(){
-
+      data: function(){ //parse through different cases
         var dexattack = false;
-        var t = 0;
+        var t = 0; //assume anything not stated is zero or ""
         var amod = 0;
         var dmod = 0;
         var label = "";
@@ -223,15 +236,15 @@ var statapp = new Vue({
           label = this.attack.label;
         }
         if (this.attack.ndie === undefined){
-          roll = false;
+          roll = false; //roll property controls if there is roll to be done for this
         }
         else{
-          roll = true;
+          roll = true; //if there is roll, the text will be highlighted, and it will be clickable
           var n = this.attack.ndie;
           var t = [];
           for (var i = 0; i < n; i++){
             if (Array.isArray(this.attack.tdie)){
-              t.push(this.attack.tdie[i]);
+              t.push(this.attack.tdie[i]); //account for the rolls
             }
             else{
               t.push(this.attack.tdie);
@@ -240,19 +253,19 @@ var statapp = new Vue({
           var attackmod = 0;
           var damagemod = 0;
           if (this.attack.dmod !== undefined){
-            var damagemod = this.attack.dmod;
+            var damagemod = this.attack.dmod; //add damage modifiers
           }
 
           if (this.attack.amod !== undefined){
-            var attackmod = this.attack.amod;
+            var attackmod = this.attack.amod; //make sure attack modifiers are implemented
           }
-          if (this.attack.dexattack !== undefined){
+          if (this.attack.dexattack !== undefined){ //dex attacks are basic attacks and have more complex rules (due to rules given to me by the DM)
             if (this.attack.dexattack == true){
               dexattack = true;
             }
           }
         }
-        if (this.attack.alttext !== undefined){
+        if (this.attack.alttext !== undefined){ //account for alttext, which is used for extra explanations
           var alttext = this.attack.alttext;
           var style = {"display": "inline-block"};
         }
@@ -263,6 +276,7 @@ var statapp = new Vue({
 
         return {roll: roll, dexattack: dexattack, ndie: n, tdie: t, amod: attackmod, dmod: damagemod, label: label, alttext: alttext, style: style};
       },
+      //there are three cases, dexattacks, specific rolls, and then non-rolls
       template:`
         <span>
         <p v-bind:style="style" v-if="dexattack" class="roller" v-on:click="$emit('dexattack', tdie, amod, dmod, label)">{{display(label)}} {{attack.text}}</p>
@@ -273,12 +287,12 @@ var statapp = new Vue({
       methods:{
         display: function (label){
           if (label != ""){
-            return label + ":";
+            return label + ":"; //put a colon between a label and the text for nice formatting
           }
         }
       }
     },
-    specialitem: {
+    specialitem: { //make special items look nice, allow more stuff to be done in future
       props: ['name'],
       template:`
         <p class="specialitem"><em>{{name}}</em></p>
@@ -288,33 +302,39 @@ var statapp = new Vue({
   methods:  {
     modfilter:  function(n){
         if (n >= 0)
-          return "+" + n;
+          return "+" + n; //put a + in front of positive modifiers
         else
-            return n;
+            return n; //implicit negative sign
         },
 
+    //basic die roll
     dieroll: function(die, modifier, n, name){
       this.lastroll = this.output;
       var value = rollutil(die, modifier);
       var crit = "";
-      if (value - modifier == 20){
-        crit = " (Critical)";
+      if (value - modifier == 20){ //crits only occur on nat 20s
+        crit = " (Critical)"; //add to the end of the roll
       }
+      //right now output is just basic text, but could be a component
       this.output = name + " " + value + " (" + n + "d" + die + " " + this.modfilter(modifier) + ")" + crit;
     },
+    //more complex attack
+    //d20+attack modifier
+    //and then damage+damage modifier
     dexattackroll: function(tdie, amod, dmod, label){
       this.lastroll = this.output;
       var attack = rollutil(20, this.mods["Dex"]+this.profbonus+amod);
       var crit = "";
       if (attack - (this.mods["Dex"]+this.profbonus+amod) == 20){
-        crit = " (Critical)";
+        crit = " (Critical)"; //check for critical attacks
+        //To Add, on crits, roll die twice, and add modifiers after
       }
       var damage = 0;
-      if (label == "Martial"){ // >: (, can't think of  a way to do well programmatically rn
+      if (label == "Martial"){ //Martial attacks have extra rules due to rules from special item (Day Break)
         damage = rollutil(tdie[0], this.mods["Dex"]+dmod) + rollutil(tdie[1], 0);
         dielabel = "d8+" + this.mods["Dex"] + "+" + dmod + "+d4"
       }
-      else{
+      else{ //Regular Attack
         damage = rollutil(tdie[0], this.mods["Dex"]+dmod);
         var dielabel = "";
         for (var i = 0; i <tdie.length; i++){
@@ -334,6 +354,7 @@ var statapp = new Vue({
   }
 });
 
+//simple die simulator
 function rollutil(die, mod){
   return(Math.ceil(die*Math.random())+mod)
 }

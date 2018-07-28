@@ -74,7 +74,7 @@
           @roll="dieroll">
         </attackroll>
       </div>
-      <div id="power" style="margin:0; border-style:none;">
+      <div id="power" style="margin:0; border-style:none; margin-top: 10%; padding-top: 10%; padding-bottom: 10%;">
       <div class="powers">
         <h1>Ki powers</h1>
         <h2>DC: {{kidc}}</h2>
@@ -89,7 +89,7 @@
       </div>
       <div class="powers">
         <h1>Triton powers</h1>
-        <h2>DC:</h2>
+        <h2>DC:{{tritondc}}</h2>
         <h2>Can only be used once per day</h2>
         <attackroll v-for="t in Triton"
           v-bind:attack="t"
@@ -105,6 +105,10 @@
               <p>Height: 4'8"</p>
               <p>Weight: 110</p>
               <p>Triton</p>
+              <p>Akra is a tough, hyper, reckless triton. She'll rush into battle, jump off wyverns, blow up volcanos, without really thinking it through at all.
+                 She's a teal woman, with orange highlights. Her head is domed, metal rings pierced through various parts of it.
+                A wave tattoo goes across the right side of her face. On her body she has several sun tatoos. She wears what resembles a sports bra, and shorts made of eel skin.
+                A permanent burn mark is left by a brass pendant hung on her neck.  </p>
             </div>
             <!--This may be something to update from somewhere,
             but for now I hardly ever pick up anything -->
@@ -131,8 +135,26 @@ The scroll tells of the Order of the Sun, which arose in defiance against the ru
               <li>Speaks in all languages, including fish</li>
               <li>Immune to disease and poison</li>
               <li>Slow fall: As a reaction, fall damage reduced by 5xLvl</li>
+              <li>Timeless body: your ki sustains you so that you suffer none of the frailty of old age, and you can't be aged magically. You can still die of old age, however. In addition, you no longer need food or water.</li>
             </ul>
             </div>
+            <div id="questions">
+              <h1>Campaign notes and questions</h1>
+              <ul>
+                <li>Akra's sister Kara was captured by the imperialist navy. She escaped and was last scene in the Daedryan ocean. Akra tied messages in bottles
+                  to several sea critters and will check back on any news next time she is near the ocean.</li>
+                  <li>The empire uses mind control, did this effect Kara? Was she effected by the undead issues of Deadrya?</li>
+                  <li>Tritons have a mysterious path, that Akra did very bad at studying. She knows they were created by surfacers, will she find clues in her surface world explorations?<</li>
+                  <li>How do surfacers eat cooked meat?</li>
+                  <li>Moira's son was vampirified after her husband made a deal with a crone. Many children in Daedra are affected by a horrific wasting illness. Is there a source to this?
+                    Does it connect to other issues?</li>
+                    <li>Tempest's dad is the wind (one of the Winds?) that's weird...</li>
+                  <li>Glaive keeps mentioning he's died before, that's weird...</li>
+                  <li>There's a creepy, maybe undead guy, named Markus who we have to worry about.</li>
+                  <li>The royal family of Deadra seems like something the Sun Monks would oppose. Akra is going to start organizing based on the Sun Monks against the Gascari.
+                    The royal wedding is coming up, and she may do something against it</li>
+                  </ul>
+              </div>
           </div>
     </div>
 
