@@ -14,6 +14,7 @@ var statapp = new Vue({
   el: "#app",
   //base data
   data: {
+    /****************BASE STATS*********************************/
     lvl: 15,
     base: { //these are the attributes which can be used to calculate many other attributes
       Str: 14,
@@ -24,13 +25,6 @@ var statapp = new Vue({
       Cha: 11
     },
     hp: 149,
-    skillcorr: { //Each skill corresponds to a different attribute
-      Str: ["Athletics"],
-      Dex: ["Acrobatics", "Sleight of Hand", "Stealth"],
-      Int: ["Arcana", "History", "Nature", "Religion","Investigation"],
-      Cha: ["Deception", "Performance","Persuasion"],
-      Wis: ["Animal Handling", "Insight", "Medicine", "Perception", "Survival"]
-    },
     profbonus: 5, //proficiency bonus corresponds to level technically, but only changes every few levels
     prof: [ //these skills get an extra bonus
       "Acrobatics",
@@ -39,12 +33,18 @@ var statapp = new Vue({
       "Nature",
       "Survival"
     ],
-    output: "",
-    lastroll: "",
-    //realized this data structure isn't ideal, could be edited
-    //each one should be a keys with various attributes, see Ki points for a better example
-    battle: [
-      {attack: {
+    /*******************End Base stats**********************************/
+    skillcorr: { //Each skill corresponds to a different attribute, static
+      Str: ["Athletics"],
+      Dex: ["Acrobatics", "Sleight of Hand", "Stealth"],
+      Int: ["Arcana", "History", "Nature", "Religion","Investigation"],
+      Cha: ["Deception", "Performance","Persuasion"],
+      Wis: ["Animal Handling", "Insight", "Medicine", "Perception", "Survival"]
+    },
+    output: "", //the output of each roll
+    lastroll: "", //shows the last roll, helpful for advantage/disadvantage mechanics
+    battle: { //combat relevant feats
+      Martial: {
         text: "1d8+1+1d4 bludgeoning damage.",
         ndie: 2,
         tdie: [8, 4],
@@ -53,39 +53,42 @@ var statapp = new Vue({
         dmod: 1,
         alttext: "Radiant damage and extra damage from daybreak.",
         label: "Martial"
-      }},
-      {attack: {
+      },
+      Sunbolt: {
         text: "1d8 ranged attack, 30 ft range. Can teleport within 5ft on hit.",
         ndie: 1,
         tdie: 8,
         dexattack: true,
         label: "Sunbolt"
-      }},
-      {attack:{
+      },
+      Sunburst:{
         text: "Brief sphere explosion with 20ft radius, 150 radius, Con saving throw, 2d6 on fail",
         ndie: 2,
         tdie: 6,
         label: "Sunburst"
-      }},
-      {attack: {
-        text: "Can make 1 unarmed strike as bonus action after unarmed monk attack"
-      }},
-      {attack: {
+      },
+      MartialArts: {
+        text: "Can make 1 unarmed strike as bonus action after unarmed monk attack",
+        label: ""
+      },
+      Multiattack: {
         text: "Multiattack twice"
-      }},
-      {attack: {
+      },
+      DeflectMissile: {
         text: "As a reaction, reduce damage by 1d10+dex+lvl. If damage is reduced to 0, use 1 Ki point to make range arrack with proficiency.",
         ndie: 1,
         tdie: 10,
-        label: "Deflect Missile"
-      }},
-      {attack: {
-        text: "Stillness of mind: Action ends charmed of frightened"
-      }},
-      {attack: {
+        label: "Deflect Missile",
+        amod: 0 //to be set in computed
+      },
+      Stillness: {
+        label: "Stillness of mind",
+        text: "Action ends charmed of frightened"
+      },
+      Evasion: {
         text: "Evasion: Dex saves change full damage to half, and half to zero"
-      }}
-    ],
+      }
+    },
     Ki: {
       Flurry: {
         cost: 1,
@@ -156,6 +159,9 @@ var statapp = new Vue({
         //formula for getting modifier based on base attributes
         out[b] = Math.floor((this.base[b]) / 2) - 5;
       }
+      /******************Do setters for special rules here******************/
+      this.battle.DeflectMissile.amod = out.Dex + this.lvl //try implementing special rule here
+
       return out;
     },
     //saving throw modifiers

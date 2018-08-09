@@ -68,8 +68,9 @@
         </roller>
       </div>
       <div class="violence">
-        <attackroll v-for="a in battle"
-          v-bind:attack="a.attack"
+        <attackroll v-for="(value, key) in battle"
+          v-bind:key="key"
+          v-bind:attack="value"
           @dexattack="dexattackroll"
           @roll="dieroll">
         </attackroll>
